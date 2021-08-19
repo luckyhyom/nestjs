@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { CreateMovieDto } from './dto/createMovie.dto';
 import { Movie } from './entities/movie.entity';
 
 @Injectable()
@@ -9,20 +10,25 @@ export class MoviesService {
         return this.movies;
     }
 
-    getOne(id: string): Movie {
-        return this.movies.find(movie => movie.id === +id);
+    getOne(id: number): Movie {
+        return this.movies.find(movie => movie.id === id);
     }
 
     search(year: number): Movie[] {
         return this.movies.filter(movie => movie.year === year);
     }
 
-    create(createdData: Movie): boolean {
-        this.movies.push(createdData);
-        return true;
+    create(createdData: CreateMovieDto): Movie {
+        const created = {
+            id: this.movies.length + 1,
+            ...createdData,
+            createdAt: new Date()
+        }
+        this.movies.push(created);
+        return created;
     }
 
-    patch(id: string, updateData): Movie {        
+    patch(id: number, updateData): Movie {        
         let updated = this.getOne(id);
         if (!updated) {
             return;
@@ -38,8 +44,8 @@ export class MoviesService {
         return updated;
     }
 
-    remove(id: string): boolean {
-        const removed = this.movies.filter(movie => movie.id !== +id);
+    remove(id: number): boolean {
+        const removed = this.movies.filter(movie => movie.id !== id);
         this.movies = removed;
         return true;
     }

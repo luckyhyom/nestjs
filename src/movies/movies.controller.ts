@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { Movie } from './entities/movie.entity';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
+import { CreateMovieDto } from './dto/createMovie.dto';
 import { MoviesService } from './movies.service';
 
 @Controller('movies')
@@ -11,7 +11,7 @@ export class MoviesController {
 
     @Get()
     getAll() {
-        return this.movieService.getAll();
+        return this.movieService.getAll();  
     }
 
     @Get('/search')
@@ -20,22 +20,26 @@ export class MoviesController {
     }
 
     @Get('/:id')
-    getOne(@Param('id') movieId: string) {
-        return this.movieService.getOne(movieId);
+    getOne(@Param('id') movieId: number) {
+        const movie = this.movieService.getOne(movieId);
+        if (!movie) {
+            return new NotFoundException('Sorry');
+        }
+        return ;
     }
 
     @Post()
-    create(@Body() movieData: Movie) {
+    create(@Body() movieData: CreateMovieDto) {
         return this.movieService.create(movieData);
     }
 
     @Delete('/:id')
-    remove(@Param('id') movieId:string) {
+    remove(@Param('id') movieId:number) {
         return this.movieService.remove(movieId);
     }
 
     @Patch('/:id')
-    patch(@Param('id') movieId: string, @Body() updateData) {
+    patch(@Param('id') movieId: number, @Body() updateData) {
         console.log(updateData,"controller");
         
         return this.movieService.patch(movieId, updateData);
