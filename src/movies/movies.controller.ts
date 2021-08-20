@@ -25,7 +25,7 @@ export class MoviesController {
         if (!movie) {
             return new NotFoundException('Sorry');
         }
-        return ;
+        return movie;
     }
 
     @Post()

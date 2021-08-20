@@ -10,13 +10,14 @@ export class MoviesService {
         return this.movies;
     }
 
+    search(year: number): Movie[] {
+        return this.movies.filter(movie => movie.year === year);
+    }
+    
     getOne(id: number): Movie {
         return this.movies.find(movie => movie.id === id);
     }
 
-    search(year: number): Movie[] {
-        return this.movies.filter(movie => movie.year === year);
-    }
 
     create(createdData: CreateMovieDto): Movie {
         const created = {
